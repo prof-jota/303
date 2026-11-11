@@ -1,1 +1,26 @@
-
+<!DOCTYPE html>
+<html>
+<body style="text-align:center; background:#222;">
+  <canvas id="gc" width="400" height="400" style="background:#000"></canvas>
+  <script>
+    let px=py=gs=tc=20, ax=ay=10, xv=yv=0, trail=[], tail=5;
+    const canvas = document.getElementById("gc"), ctx = canvas.getContext("2d");
+    document.addEventListener("keydown", e => {
+      if(e.key=='ArrowLeft'&&xv!=1) {xv=-1;yv=0;} if(e.key=='ArrowUp'&&yv!=1) {xv=0;yv=-1;}
+      if(e.key=='ArrowRight'&&xv!=-1) {xv=1;yv=0;} if(e.key=='ArrowDown'&&yv!=-1) {xv=0;yv=1;}
+    });
+    setInterval(() => {
+      px=(px+xv+tc)%tc; py=(py+yv+tc)%tc;
+      ctx.fillStyle="black"; ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle="lime";
+      trail.forEach(t => {
+        ctx.fillRect(t.x*gs, t.y*gs, gs-2, gs-2);
+        if(t.x==px && t.y==py && (xv||yv)) tail=5;
+      });
+      trail.push({x:px,y:py}); while(trail.length>tail) trail.shift();
+      if(ax==px && ay==py) { tail++; ax=Math.floor(Math.random()*tc); ay=Math.floor(Math.random()*tc); }
+      ctx.fillStyle="red"; ctx.fillRect(ax*gs, ay*gs, gs-2, gs-2);
+    }, 1000/15);
+  </script>
+</body>
+</html>
